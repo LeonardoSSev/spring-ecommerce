@@ -1,6 +1,6 @@
 package com.leonardossev.ecommerce.service;
 
-import com.leonardossev.ecommerce.exception.StatusListIncompleteException;
+import com.leonardossev.ecommerce.exception.IncompleteListException;
 import com.leonardossev.ecommerce.helper.MapHelper;
 import com.leonardossev.ecommerce.model.dto.StatusDTO;
 import com.leonardossev.ecommerce.model.entity.StatusEntity;
@@ -75,11 +75,11 @@ public class StatusServiceImplTest {
     public void shouldThrowStatusListIncompleteExceptionWhenListHasLessThanFourItems() {
         this.prepareToListWrongly();
 
-        assertThrows(StatusListIncompleteException.class, () -> this.statusService.listStatus());
+        assertThrows(IncompleteListException.class, () -> this.statusService.listStatus());
     }
 
     @Test
-    public void shouldListFourStatusDTOs() throws StatusListIncompleteException {
+    public void shouldListFourStatusDTOs() throws IncompleteListException {
         this.prepareToListCorrectly();
 
         var statusList = this.statusService.listStatus();
