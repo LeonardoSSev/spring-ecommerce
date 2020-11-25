@@ -72,7 +72,7 @@ public class StatusServiceImplTest {
     );
 
     @Test
-    public void shouldThrowStatusListIncompleteExceptionWhenListHasLessThanFourItems() {
+    public void shouldThrowIncompleteListExceptionWhenListHasLessThanFourItems() {
         this.prepareToListWrongly();
 
         assertThrows(IncompleteListException.class, () -> this.statusService.listStatus());
