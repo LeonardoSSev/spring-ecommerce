@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
@@ -20,7 +21,7 @@ public class MessageSourceConfiguration {
     @Bean
     @Primary
     public MessageSourceAccessor accessor() {
-        return new MessageSourceAccessor(messageSource);
+        return new MessageSourceAccessor(this.messageSource);
     }
 
     @Bean
@@ -30,4 +31,16 @@ public class MessageSourceConfiguration {
 
         return localeResolver;
     }
+
+    @Bean
+    public ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource() {
+        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+
+        source.setBasenames("classpath:messages");
+        source.setCacheSeconds(-1);
+        source.setDefaultEncoding("ISO-8859-1");
+
+        return source;
+    }
+
 }
