@@ -99,7 +99,7 @@ public class StatusServiceImplTest {
 
         var statusList = this.statusService.listStatus();
 
-        assertEquals(statusList.size(), this.STATUS_LIST_SIZE);
+        assertEquals(this.STATUS_LIST_SIZE, statusList.size());
     }
 
     private void prepareToListWrongly() {

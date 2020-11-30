@@ -76,7 +76,7 @@ public class UserTypeServiceImplTest {
 
         var exception= assertThrows(IncompleteListException.class, () -> this.userTypeService.listUserType());
 
-        assertEquals(exception.getMessage(), this.USER_TYPE_LIST_EXCEPTION_MESSAGE);
+        assertEquals(this.USER_TYPE_LIST_EXCEPTION_MESSAGE, exception.getMessage());
     }
 
     @Test
