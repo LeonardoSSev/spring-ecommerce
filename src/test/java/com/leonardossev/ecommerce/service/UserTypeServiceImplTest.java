@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -28,6 +30,9 @@ public class UserTypeServiceImplTest {
 
     @Mock
     private MapHelper mapper;
+
+    @Mock
+    private MessageSourceAccessor acessor;
 
     @InjectMocks
     private UserTypeServiceImpl userTypeService;
@@ -56,11 +61,22 @@ public class UserTypeServiceImplTest {
             .build()
     );
 
+    private final String USER_TYPE_LIST_EXCEPTION_MESSAGE = "The user types list is incomplete.";
+
     @Test
     public void shouldThrowIncompleteListExceptionWhenListHasLessThanTwoItems() {
         this.prepareToListWrongly();
 
         assertThrows(IncompleteListException.class, () -> this.userTypeService.listUserType());
+    }
+
+    @Test
+    public void shouldThrowIncompleteListExceptionWithMessageWhenListHasLessThanTwoItems() {
+        this.prepareToListWrongly();
+
+        var exception= assertThrows(IncompleteListException.class, () -> this.userTypeService.listUserType());
+
+        assertEquals(exception.getMessage(), this.USER_TYPE_LIST_EXCEPTION_MESSAGE);
     }
 
     @Test
@@ -78,6 +94,7 @@ public class UserTypeServiceImplTest {
 
         when(this.userTypeRepository.findAll()).thenReturn(userTypeEntityListWithOneItem);
         when(this.mapper.mapList(userTypeEntityListWithOneItem, UserTypeDTO.class)).thenReturn(userTypeDTOListWithOneItem);
+        when(this.acessor.getMessage("error.list.incomplete.userType")).thenReturn(this.USER_TYPE_LIST_EXCEPTION_MESSAGE);
     }
 
     private void prepareToListCorrectly() {

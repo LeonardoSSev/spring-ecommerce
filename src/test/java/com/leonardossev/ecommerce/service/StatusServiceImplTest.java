@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -27,6 +28,9 @@ public class StatusServiceImplTest {
 
     @Mock
     private MapHelper mapper;
+
+    @Mock
+    private MessageSourceAccessor accessor;
 
     @InjectMocks
     private StatusServiceImpl statusService;
@@ -71,11 +75,22 @@ public class StatusServiceImplTest {
             .build()
     );
 
+    private final String STATUS_LIST_EXCEPTION_MESSAGE = "The status list is incomplete.";
+
     @Test
     public void shouldThrowIncompleteListExceptionWhenListHasLessThanFourItems() {
         this.prepareToListWrongly();
 
         assertThrows(IncompleteListException.class, () -> this.statusService.listStatus());
+    }
+
+    @Test
+    public void shouldThrowIncompleteListExceptionWithMessageWhenListHasLessThanFourItems() {
+        this.prepareToListWrongly();
+
+        var exception= assertThrows(IncompleteListException.class, () -> this.statusService.listStatus());
+
+        assertEquals(this.STATUS_LIST_EXCEPTION_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -93,6 +108,7 @@ public class StatusServiceImplTest {
 
         when(this.statusRepository.findAll()).thenReturn(statusEntityListWithOneItem);
         when(this.mapper.mapList(statusEntityListWithOneItem, StatusDTO.class)).thenReturn(statusDTOListWithOneItem);
+        when(this.accessor.getMessage("error.list.incomplete.status")).thenReturn(this.STATUS_LIST_EXCEPTION_MESSAGE);
     }
 
     private void prepareToListCorrectly() {
